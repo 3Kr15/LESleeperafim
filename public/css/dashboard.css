@@ -1,0 +1,226 @@
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #0f172a;
+    margin: 0;
+    padding: 20px;
+    color: #e2e8f0;
+    overflow-x: hidden;
+}
+
+.dashboard-main {
+    margin-left: 340px; /* Sidebar width + padding */
+    padding: 20px;
+}
+
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: radial-gradient(circle, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 20px 20px;
+    opacity: 0.3;
+    z-index: -1;
+}
+
+/* Starry Night Background */
+.stars-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+    z-index: -2;
+}
+
+.stars, .twinkling {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.stars {
+    background: transparent url('data:image/svg+xml,<svg width="200" height="200" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="stars" x="0" y="0" width="200" height="200" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.8"/><circle cx="75" cy="75" r="0.5" fill="white" opacity="0.6"/><circle cx="125" cy="125" r="1" fill="white" opacity="0.9"/><circle cx="175" cy="175" r="0.5" fill="white" opacity="0.7"/><circle cx="50" cy="150" r="1" fill="white" opacity="0.5"/><circle cx="150" cy="50" r="0.5" fill="white" opacity="0.8"/><circle cx="100" cy="25" r="0.5" fill="white" opacity="0.6"/><circle cx="25" cy="100" r="1" fill="white" opacity="0.7"/><circle cx="175" cy="100" r="0.5" fill="white" opacity="0.9"/><circle cx="100" cy="175" r="1" fill="white" opacity="0.6"/></pattern></defs><rect width="100%" height="100%" fill="url(%23stars)"/></svg>') repeat;
+    animation: move-stars 100s linear infinite;
+}
+
+.twinkling {
+    background: transparent url('data:image/svg+xml,<svg width="300" height="300" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="twinkle" x="0" y="0" width="300" height="300" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="white" opacity="0"><animate attributeName="opacity" values="0;1;0" dur="3s" repeatCount="indefinite"/></circle><circle cx="150" cy="100" r="0.5" fill="white" opacity="0"><animate attributeName="opacity" values="0;1;0" dur="2s" repeatCount="indefinite" begin="1s"/></circle><circle cx="250" cy="200" r="1" fill="white" opacity="0"><animate attributeName="opacity" values="0;1;0" dur="4s" repeatCount="indefinite" begin="0.5s"/></circle><circle cx="100" cy="250" r="0.5" fill="white" opacity="0"><animate attributeName="opacity" values="0;1;0" dur="3.5s" repeatCount="indefinite" begin="2s"/></circle></pattern></defs><rect width="100%" height="100%" fill="url(%23twinkle)"/></svg>') repeat;
+}
+
+.clouds {
+    background: url('data:image/svg+xml,<svg width="400" height="400" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="clouds" x="0" y="0" width="400" height="400" patternUnits="userSpaceOnUse"><ellipse cx="100" cy="100" rx="60" ry="30" fill="white" opacity="0.03"/><ellipse cx="300" cy="200" rx="80" ry="40" fill="white" opacity="0.02"/><ellipse cx="50" cy="300" rx="40" ry="20" fill="white" opacity="0.03"/></pattern></defs><rect width="100%" height="100%" fill="url(%23clouds)"/></svg>') repeat;
+    animation: move-clouds 120s linear infinite;
+}
+
+@keyframes move-stars {
+    from { transform: translateY(-100px); }
+    to { transform: translateY(100vh); }
+}
+
+@keyframes move-clouds {
+    from { transform: translateX(-100px); }
+    to { transform: translateX(100vw); }
+}
+
+.dashboard-container {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+    width: 100%;
+    max-width: 1200px;
+}
+
+.sleep-tracker-card {
+    grid-column: 1 / 2;
+}
+
+.usage-insights {
+    grid-column: 2 / 3;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.card {
+    background-color: rgba(17, 21, 64, 0.5);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37), 0 0 20px rgba(10, 10, 80, 0.5);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    padding: 20px;
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card h2 {
+    margin-top: 0;
+    font-size: 1.4em;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.card h2 svg {
+    width: 28px;
+    height: 28px;
+    color: #60a5fa;
+}
+
+h1 {
+    color: #ffffff;
+}
+
+.sleep-tracker {
+    text-align: center;
+}
+
+.sleep-tracker .sleep-time {
+    font-size: 3em;
+    font-weight: bold;
+    color: #60a5fa;
+    margin: 10px 0;
+    text-shadow: 0 0 10px rgba(96, 165, 250, 0.5);
+}
+
+.sleep-tracker .sleep-quality {
+    font-size: 1.1em;
+    color: #cbd5e1;
+}
+
+.app-usage ul {
+    list-style: none;
+    padding: 0;
+}
+
+.app-usage li {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #334155;
+    font-size: 1.1em;
+}
+
+.app-usage li:last-child {
+    border-bottom: none;
+}
+
+.weekly-gain {
+    text-align: center;
+}
+
+.weekly-gain .gain-value {
+    font-size: 2.5em;
+    font-weight: bold;
+    color: #34d399;
+    margin: 10px 0;
+    text-shadow: 0 0 10px rgba(52, 211, 153, 0.5);
+}
+
+.weekly-gain .gain-text {
+    font-size: 1.1em;
+    color: #cbd5e1;
+}
+
+/* Floating Elements */
+.floating-elements {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: -1;
+}
+
+.floating-cloud {
+    position: absolute;
+    font-size: 2rem;
+    opacity: 0.3;
+    animation: float 20s ease-in-out infinite;
+}
+
+.cloud-1 {
+    top: 20%;
+    left: 10%;
+    animation-delay: 0s;
+}
+
+.cloud-2 {
+    top: 60%;
+    right: 20%;
+    animation-delay: 7s;
+}
+
+.cloud-3 {
+    top: 80%;
+    left: 30%;
+    animation-delay: 14s;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+}
+
+@media (max-width: 768px) {
+    .dashboard-main {
+        margin-left: 0;
+    }
+    .dashboard-container {
+        grid-template-columns: 1fr;
+    }
+    .sleep-tracker-card {
+        grid-column: auto;
+    }
+}

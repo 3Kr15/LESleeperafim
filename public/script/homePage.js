@@ -1,0 +1,157 @@
+
+class DynamicSleepApp {
+    constructor() {
+        this.sleepModeToggle = document.getElementById('sleep-mode-toggle');
+        this.mainContent = document.getElementById('mainContent');
+        this.modeIcon = document.getElementById('modeIcon');
+        this.welcomeTitle = document.getElementById('welcomeTitle');
+        this.welcomeSubtitle = document.getElementById('welcomeSubtitle');
+        this.controlTitle = document.getElementById('controlTitle');
+        this.controlDescription = document.getElementById('controlDescription');
+        this.quoteText = document.getElementById('quoteText');
+        this.quoteCite = document.getElementById('quoteCite');
+        
+        // Background elements
+        this.starsContainer = document.getElementById('starsContainer');
+        this.sunContainer = document.getElementById('sunContainer');
+        this.cloudsContainer = document.getElementById('cloudsContainer');
+
+        this.isSleepMode = false;
+        this.init();
+    }
+
+    init() {
+        // Set initial time-based theme
+        this.setTimeBasedTheme();
+        
+        // Add toggle event listener
+        this.sleepModeToggle.addEventListener('change', () => {
+            this.toggleSleepMode();
+        });
+
+        // Update theme every minute
+        setInterval(() => {
+            if (!this.isSleepMode) {
+                this.setTimeBasedTheme();
+            }
+        }, 60000);
+    }
+
+    getCurrentTimeOfDay() {
+        const hour = new Date().getHours();
+        
+        if (hour >= 6 && hour < 12) {
+            return 'morning';
+        } else if (hour >= 12 && hour < 18) {
+            return 'afternoon';
+        } else {
+            return 'night';
+        }
+    }
+
+    setTimeBasedTheme() {
+        const timeOfDay = this.getCurrentTimeOfDay();
+        
+        // Remove all time classes
+        this.mainContent.classList.remove('morning', 'afternoon', 'night');
+        
+        // Add current time class
+        this.mainContent.classList.add(timeOfDay);
+        
+        // Update content based on time
+        this.updateContentForTime(timeOfDay);
+        
+        // Update background elements
+        this.updateBackgroundElements(timeOfDay);
+    }
+
+    updateContentForTime(timeOfDay) {
+        const themes = {
+            morning: {
+                icon: '<circle cx="12" cy="12" r="5" fill="currentColor"/><g stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></g>',
+                iconClass: 'sun',
+                title: 'Good Morning',
+                subtitle: 'Start your day with energy and focus',
+                controlTitle: 'Enter Sleep Mode',
+                controlDescription: 'Switch to peaceful night environment',
+                quote: 'Every morning we are born again. What we do today is what matters most.',
+                cite: '- Buddha'
+            },
+            afternoon: {
+                icon: '<circle cx="12" cy="12" r="5" fill="currentColor" opacity="0.8"/><g stroke="currentColor" stroke-width="2" opacity="0.6"><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/></g>',
+                iconClass: 'sunset',
+                title: 'Evening Wind Down',
+                subtitle: 'The day transitions into peaceful dusk',
+                controlTitle: 'Enter Sleep Mode',
+                controlDescription: 'Prepare for a restful night',
+                quote: 'As the sun sets, let your worries fade away with the light.',
+                cite: '- Anonymous'
+            },
+            night: {
+                icon: '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor"/>',
+                iconClass: 'moon',
+                title: 'Sleep Mode Active',
+                subtitle: 'Your peaceful night begins now',
+                controlTitle: 'Sleep Mode',
+                controlDescription: 'Peaceful night environment active',
+                quote: 'Sleep is the best meditation.',
+                cite: '- Dalai Lama'
+            }
+        };
+
+        const theme = themes[timeOfDay];
+        
+        // Update icon
+        this.modeIcon.innerHTML = theme.icon;
+        this.modeIcon.setAttribute("class", `mode-icon ${theme.iconClass}`);
+
+        
+        // Update text content
+        this.welcomeTitle.textContent = theme.title;
+        this.welcomeSubtitle.textContent = theme.subtitle;
+        this.controlTitle.textContent = theme.controlTitle;
+        this.controlDescription.textContent = theme.controlDescription;
+        this.quoteText.innerHTML = `${theme.quote}<cite>${theme.cite}</cite>`;
+    }
+
+    updateBackgroundElements(timeOfDay) {
+        // Reset all background elements
+        this.starsContainer.classList.remove('active');
+        this.sunContainer.classList.remove('active');
+        this.cloudsContainer.classList.remove('active');
+
+        // Activate appropriate background elements
+        switch(timeOfDay) {
+            case 'morning':
+                this.sunContainer.classList.add('active');
+                this.cloudsContainer.classList.add('active');
+                break;
+            case 'afternoon':
+                this.cloudsContainer.classList.add('active');
+                break;
+            case 'night':
+                this.starsContainer.classList.add('active');
+                break;
+        }
+    }
+
+    toggleSleepMode() {
+        this.isSleepMode = this.sleepModeToggle.checked;
+        
+        if (this.isSleepMode) {
+            // Force night mode
+            this.mainContent.classList.remove('morning', 'afternoon');
+            this.mainContent.classList.add('night');
+            this.updateContentForTime('night');
+            this.updateBackgroundElements('night');
+        } else {
+            // Return to time-based theme
+            this.setTimeBasedTheme();
+        }
+    }
+}
+
+// Initialize the app when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    new DynamicSleepApp();
+});
