@@ -10,7 +10,7 @@ class DynamicSleepApp {
         this.controlDescription = document.getElementById('controlDescription');
         this.quoteText = document.getElementById('quoteText');
         this.quoteCite = document.getElementById('quoteCite');
-        
+
         // Background elements
         this.starsContainer = document.getElementById('starsContainer');
         this.sunContainer = document.getElementById('sunContainer');
@@ -23,7 +23,7 @@ class DynamicSleepApp {
     init() {
         // Set initial time-based theme
         this.setTimeBasedTheme();
-        
+
         // Add toggle event listener
         this.sleepModeToggle.addEventListener('change', () => {
             this.toggleSleepMode();
@@ -39,7 +39,7 @@ class DynamicSleepApp {
 
     getCurrentTimeOfDay() {
         const hour = new Date().getHours();
-        
+
         if (hour >= 6 && hour < 12) {
             return 'morning';
         } else if (hour >= 12 && hour < 18) {
@@ -51,16 +51,16 @@ class DynamicSleepApp {
 
     setTimeBasedTheme() {
         const timeOfDay = this.getCurrentTimeOfDay();
-        
+
         // Remove all time classes
         this.mainContent.classList.remove('morning', 'afternoon', 'night');
-        
+
         // Add current time class
         this.mainContent.classList.add(timeOfDay);
-        
+
         // Update content based on time
         this.updateContentForTime(timeOfDay);
-        
+
         // Update background elements
         this.updateBackgroundElements(timeOfDay);
     }
@@ -100,12 +100,12 @@ class DynamicSleepApp {
         };
 
         const theme = themes[timeOfDay];
-        
+
         // Update icon
         this.modeIcon.innerHTML = theme.icon;
         this.modeIcon.setAttribute("class", `mode-icon ${theme.iconClass}`);
 
-        
+
         // Update text content
         this.welcomeTitle.textContent = theme.title;
         this.welcomeSubtitle.textContent = theme.subtitle;
@@ -121,7 +121,7 @@ class DynamicSleepApp {
         this.cloudsContainer.classList.remove('active');
 
         // Activate appropriate background elements
-        switch(timeOfDay) {
+        switch (timeOfDay) {
             case 'morning':
                 this.sunContainer.classList.add('active');
                 this.cloudsContainer.classList.add('active');
@@ -137,16 +137,21 @@ class DynamicSleepApp {
 
     toggleSleepMode() {
         this.isSleepMode = this.sleepModeToggle.checked;
-        
+
         if (this.isSleepMode) {
             // Force night mode
             this.mainContent.classList.remove('morning', 'afternoon');
             this.mainContent.classList.add('night');
             this.updateContentForTime('night');
             this.updateBackgroundElements('night');
+
+            //Send message to extension browser
+            window.postMessage({ type: "SLEEPWELL_START_BLOCKING" }, "*");
         } else {
             // Return to time-based theme
             this.setTimeBasedTheme();
+            window.postMessage({ type: "SLEEPWELL_STOP_BLOCKING" }, "*");
+
         }
     }
 }
