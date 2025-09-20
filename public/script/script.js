@@ -12,11 +12,30 @@ document.addEventListener("DOMContentLoaded", () => {
       .catch((error) => console.error("Error loading component:", error));
   };
 
+  const setActiveNavItem = () => {
+    const currentPage = window.location.pathname.split("/").pop();
+    const navLinks = document.querySelectorAll(".nav-link");
+    
+    navLinks.forEach(link => {
+      const linkPage = link.getAttribute("href").split("/").pop();
+      const navItem = link.parentElement;
+
+      if (linkPage === currentPage) {
+        navItem.classList.add("active");
+      } else {
+        navItem.classList.remove("active");
+      }
+    });
+  };
+
   // Check if we're in the html folder or root folder
   const currentPath = window.location.pathname;
   const navbarPath = currentPath.includes('/html/') ? "./navbar.html" : "./html/navbar.html";
   
-  loadComponent(navbarPath, "navbar-container", attachSignOutListener);
+  loadComponent(navbarPath, "navbar-container", () => {
+    attachSignOutListener();
+    setActiveNavItem();
+  });
 });
 
 function attachSignOutListener() {
@@ -36,48 +55,50 @@ const sign_in_btn = document.querySelector("#sign-in-btn");
 const sign_up_btn = document.querySelector("#sign-up-btn");
 const container = document.querySelector(".container");
 
-sign_up_btn.addEventListener("click", () => {
-  container.classList.add("sign-up-mode");
-});
+if (sign_in_btn && sign_up_btn) {
+    sign_up_btn.addEventListener("click", () => {
+      container.classList.add("sign-up-mode");
+    });
 
-sign_in_btn.addEventListener("click", () => {
-  container.classList.remove("sign-up-mode");
-});
+    sign_in_btn.addEventListener("click", () => {
+      container.classList.remove("sign-up-mode");
+    });
+}
 
 // Get the forms
 const signInForm = document.querySelector(".sign-in-form");
 const signUpForm = document.querySelector(".sign-up-form");
 
-// Simulated login
-signInForm.addEventListener("submit", (e) => {
-  e.preventDefault(); // prevent actual form submission
+if (signInForm && signUpForm) {
+    // Simulated login
+    signInForm.addEventListener("submit", (e) => {
+      e.preventDefault(); // prevent actual form submission
 
-  const username = signInForm.querySelector('input[type="text"]').value;
-  const password = signInForm.querySelector('input[type="password"]').value;
+      const username = signInForm.querySelector('input[type="text"]').value;
+      const password = signInForm.querySelector('input[type="password"]').value;
 
-  // You can add a simple validation
-  if (username && password) {
-    alert(`Welcome back, ${username}! Redirecting to your dashboard...`);
-    window.location.href = "dashboard.html"; // replace with your page
-  } else {
-    alert("Please enter username and password.");
-  }
-});
+      // You can add a simple validation
+      if (username && password) {
+        alert(`Welcome back, ${username}! Redirecting to your dashboard...`);
+        window.location.href = "dashboard.html"; // replace with your page
+      } else {
+        alert("Please enter username and password.");
+      }
+    });
 
-// Simulated signup
-signUpForm.addEventListener("submit", (e) => {
-  e.preventDefault();
+    // Simulated signup
+    signUpForm.addEventListener("submit", (e) => {
+      e.preventDefault();
 
-  const username = signUpForm.querySelector('input[type="text"]').value;
-  const email = signUpForm.querySelector('input[type="email"]').value;
-  const password = signUpForm.querySelector('input[type="password"]').value;
+      const username = signUpForm.querySelector('input[type="text"]').value;
+      const email = signUpForm.querySelector('input[type="email"]').value;
+      const password = signUpForm.querySelector('input[type="password"]').value;
 
-  if (username && email && password) {
-    alert(`Thanks for signing up, ${username}! Redirecting to your dashboard...`);
-    window.location.href = "dashboard.html"; // replace with your page
-  } else {
-    alert("Please fill in all fields.");
-  }
-});
-
-
+      if (username && email && password) {
+        alert(`Thanks for signing up, ${username}! Redirecting to your dashboard...`);
+        window.location.href = "dashboard.html"; // replace with your page
+      } else {
+        alert("Please fill in all fields.");
+      }
+    });
+}
