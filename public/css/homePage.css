@@ -1,4 +1,3 @@
-
 * {
     margin: 0;
     padding: 0;
@@ -853,4 +852,58 @@ body {
         text-align: center;
         gap: 20px;
     }
+}
+
+.vibration-toggle-container {
+    position: relative;
+    margin-left: 20px;
+}
+
+.vibration-toggle-switch {
+    display: none;
+}
+
+.vibration-toggle-label {
+    display: block;
+    width: 50px;
+    height: 26px;
+    background: #475569;
+    border-radius: 13px;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.vibration-toggle-slider {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 22px;
+    height: 22px;
+    background: white;
+    border-radius: 50%;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.vibration-toggle-slider::before {
+    content: '🔕';
+    font-size: 10px;
+    transition: all 0.3s ease;
+}
+
+.vibration-toggle-switch:checked + .vibration-toggle-label {
+    background: linear-gradient(135deg, #60a5fa, #3b82f6);
+}
+
+.vibration-toggle-switch:checked + .vibration-toggle-label .vibration-toggle-slider {
+    transform: translateX(24px);
+}
+
+.vibration-toggle-switch:checked + .vibration-toggle-label .vibration-toggle-slider::before {
+    content: '🌊';
+}
+
+.sleep-settings.active {
+    display: block;
 }

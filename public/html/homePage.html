@@ -5,32 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SleepWell - Sweet Dreams Await</title>
     <link rel="stylesheet" href="../css/homePage.css">
-    <div id = "navbar-container"></div>
 </head>
 <body>
-    <!-- Main Content Area -->
+    <div id="navbar-container"></div>
     <main class="main-content" id="mainContent">
-        <!-- Background Elements -->
         <div class="background-elements">
-            <!-- Stars (Night Mode) -->
             <div class="stars-container" id="starsContainer">
                 <div class="stars"></div>
                 <div class="twinkling"></div>
             </div>
-
-            <!-- Sun (Morning Mode) -->
             <div class="sun-container" id="sunContainer">
                 <div class="sun"></div>
             </div>
-
-            <!-- Clouds (Morning/Afternoon) -->
             <div class="clouds-container" id="cloudsContainer">
                 <div class="cloud cloud-1"></div>
                 <div class="cloud cloud-2"></div>
             </div>
         </div>
-
-        <!-- Hero Section -->
         <div class="hero-section">
             <div class="mode-indicator">
                 <div class="mode-icon-container">
@@ -41,8 +32,6 @@
                 <h1 class="welcome-title" id="welcomeTitle">Sleep Mode Active</h1>
                 <p class="welcome-subtitle" id="welcomeSubtitle">Your peaceful night begins now</p>
             </div>
-
-            <!-- Sleep Stats Cards -->
             <div class="sleep-stats">
                 <div class="stat-card">
                     <div class="stat-icon">
@@ -56,7 +45,6 @@
                         <p>Last Night's Sleep</p>
                     </div>
                 </div>
-
                 <div class="stat-card">
                     <div class="stat-icon">
                         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -69,8 +57,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Sleep Mode Control -->
             <div class="sleep-mode-control">
                 <div class="control-card">
                     <div class="control-content">
@@ -87,12 +73,8 @@
                             </label>
                         </div>
                     </div>
-                    
-                    <!-- Sleep Mode Settings (Hidden by default) -->
                     <div class="sleep-settings" id="sleepSettings">
                         <div class="settings-divider"></div>
-                        
-                        <!-- Vibration Frequency Control -->
                         <div class="setting-group">
                             <div class="setting-header">
                                 <div class="setting-icon">🌊</div>
@@ -100,18 +82,22 @@
                                     <h4>Mechanical Vibration</h4>
                                     <p>Sleep-inducing frequency: <span id="frequencyValue">0.5</span> Hz</p>
                                 </div>
+                                <!-- Vibration toggle switch -->
+                                <div class="vibration-toggle-container">
+                                    <input type="checkbox" id="vibration-toggle" class="vibration-toggle-switch" checked>
+                                    <label for="vibration-toggle" class="vibration-toggle-label">
+                                        <span class="vibration-toggle-slider"></span>
+                                    </label>
+                                </div>
                             </div>
                             <div class="frequency-control">
-                                <input type="range" id="frequencySlider" class="frequency-slider" 
-                                       min="0.5" max="2.0" step="0.1" value="0.5">
+                                <input type="range" id="frequencySlider" class="frequency-slider" min="0.5" max="2.0" step="0.1" value="0.5">
                                 <div class="frequency-labels">
                                     <span>0.5 Hz</span>
                                     <span>2.0 Hz</span>
                                 </div>
                             </div>
                         </div>
-
-                        <!-- White Noise Control -->
                         <div class="setting-group">
                             <div class="setting-header">
                                 <div class="setting-icon">🎵</div>
@@ -126,12 +112,17 @@
                                     </label>
                                 </div>
                             </div>
+                            <div class="volume-control">
+                                <input type="range" id="whiteNoiseVolume" class="volume-slider" min="0" max="1" step="0.01" value="0.5">
+                                <div class="volume-labels">
+                                    <span>0%</span>
+                                    <span>100%</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <!-- Quote -->
             <div class="quote-section" id="quoteSection">
                 <blockquote id="quoteText">
                     "Sleep is the best meditation."
@@ -140,7 +131,7 @@
             </div>
         </div>
     </main>
-    <script src="../script/homePage.js"></script>
     <script src="../script/script.js"></script>
+    <script src="../script/homePage.js"></script>
 </body>
 </html>
