@@ -9,11 +9,29 @@ let activeDomain = null;
 let lastActiveTime = null;
 let trackingEnabled = false;
 
+// Function to send usage to Node.js server
+const sendUsageToServer = async (siteUsage) => {
+    try {
+        const response = await fetch('http://localhost:44223/api/usage', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(siteUsage)
+        });
+        const result = await response.json();
+        console.log('Server responded:', result); // ✅ logs { status: 'ok' }
+    } catch (err) {
+        console.error('Failed to send usage:', err);
+    }
+};
 
-// Periodic saving
+// Periodic saving every 10s
 setInterval(() => {
+    // Save locally first
     recordTime(activeDomain, lastActiveTime, siteUsage);
     chrome.storage.local.set({ siteUsage });
+
+    // Send data to server
+    sendUsageToServer(siteUsage);
 }, 10000); // every 10s
 
 // When any navigation starts

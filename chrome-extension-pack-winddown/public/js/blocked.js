@@ -21,6 +21,12 @@ const updateTime = () => {
     document.getElementById('currentTime').textContent = `Current time: ${timeString}`;
 };
 
+document.querySelector('.dashboard-btn').addEventListener('click', (e) => {
+  e.preventDefault(); // Prevents the default anchor behavior
+
+  // Navigate to the dashboard
+  window.location.href = 'http://localhost:44223/html/homePage.html';
+});
 
 // Initialize
 createStars();
