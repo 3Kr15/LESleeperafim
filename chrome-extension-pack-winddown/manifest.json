@@ -2,7 +2,7 @@
     "manifest_version": 3,
     "name": "Winddown Guardian",
     "version": "1.0",
-    "description": "Blocks all sites except LESleeperafim web application",
+    "description": "Blocks all sites except SleepWell web application and selected pages",
     "permissions": [
         "tabs",
         "webNavigation",
@@ -17,5 +17,16 @@
     },
     "host_permissions": [
         "<all_urls>"
+    ],
+    "content_scripts": [
+        {
+            "matches": [
+                "http://localhost:44223/*"
+            ],
+            "js": [
+                "content.js"
+            ],
+            "run_at": "document_start"
+        }
     ]
 }
