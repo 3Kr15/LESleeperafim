@@ -85,7 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const password = signUpForm.querySelector('input[type="password"]').value;
       if (username && email && password) {
         alert(`Thanks for signing up, ${username}! Redirecting to your dashboard...`);
-        window.location.href = "dashboard.html";
+        window.location.href = "html/dashboard.html";
       } else {
         alert("Please fill in all fields.");
       }
