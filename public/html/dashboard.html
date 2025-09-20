@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
     <title>Sleep Dashboard</title>
     <link rel="stylesheet" href="../css/dashboard.css">
 </head>
+
 <body>
     <div id="navbar-container"></div>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -22,7 +24,11 @@
         <div class="dashboard-container">
             <div class="card sleep-tracker-card">
                 <div class="sleep-tracker">
-                    <h2><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-moon"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg> Last Night's Sleep</h2>
+                    <h2><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="feather feather-moon">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                        </svg> Last Night's Sleep</h2>
                     <div class="sleep-time">7h 45m</div>
                     <div class="sleep-quality">Quality: 85%</div>
                     <canvas id="sleepChart"></canvas>
@@ -32,20 +38,28 @@
             <div class="usage-insights">
                 <div class="card weekly-gain-card">
                     <div class="weekly-gain">
-                        <h2><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-star"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg> Weekly Sleep Gain</h2>
+                        <h2><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="feather feather-star">
+                                <polygon
+                                    points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                                </polygon>
+                            </svg> Weekly Sleep Gain</h2>
                         <div class="gain-value">+ 3h 30m</div>
                         <div class="gain-text">Compared to last week</div>
                     </div>
                 </div>
 
                 <div class="card app-usage">
-                    <h2><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-star"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg> App Usage After 11 PM</h2>
-                    <ul>
-                        <li><span>YouTube</span> <span>45 min</span></li>
-                        <li><span>Instagram</span> <span>25 min</span></li>
-                        <li><span>Twitter</span> <span>15 min</span></li>
-                        <li><span>Browser</span> <span>10 min</span></li>
-                    </ul>
+                    <h2>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="feather feather-star">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77
+                             5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                        </svg> App Usage After 11 PM
+                    </h2>
+                    <ul id="appUsageList"></ul> <!-- populated ltr -->
                 </div>
             </div>
         </div>
@@ -60,5 +74,7 @@
 
     <script src="../script/dashboard.js"></script>
     <script src="../script/script.js"></script>
+    <script src="../script/appUsage.js"></script>
 </body>
+
 </html>
