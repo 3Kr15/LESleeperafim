@@ -1,4 +1,3 @@
-
 class DynamicSleepApp {
     constructor() {
         this.sleepModeToggle = document.getElementById('sleep-mode-toggle');
@@ -10,18 +9,23 @@ class DynamicSleepApp {
         this.controlDescription = document.getElementById('controlDescription');
         this.quoteText = document.getElementById('quoteText');
         this.quoteCite = document.getElementById('quoteCite');
-
-        // Background elements
+        this.sleepSettings = document.getElementById('sleepSettings');
+        this.frequencySlider = document.getElementById('frequencySlider');
+        this.frequencyValue = document.getElementById('frequencyValue');
+        this.vibrationToggle = document.getElementById('vibration-toggle');
+        this.whiteNoiseToggle = document.getElementById('white-noise-toggle');
+        this.whiteNoiseVolume = document.getElementById('whiteNoiseVolume');
+        this.whiteNoiseAudio = new Audio('../assets/whitenoise.mp3');
+        this.whiteNoiseAudio.loop = true;
         this.starsContainer = document.getElementById('starsContainer');
         this.sunContainer = document.getElementById('sunContainer');
         this.cloudsContainer = document.getElementById('cloudsContainer');
-
         this.isSleepMode = false;
+        this.vibrationInterval = null;
         this.init();
     }
 
     init() {
-        // Set initial time-based theme
         this.setTimeBasedTheme();
 
         // Add toggle event listener
@@ -29,7 +33,31 @@ class DynamicSleepApp {
             this.toggleSleepMode();
         });
 
-        // Update theme every minute
+        this.frequencySlider.addEventListener('input', () => {
+            this.frequencyValue.textContent = this.frequencySlider.value;
+            if (this.isSleepMode && this.vibrationToggle.checked) {
+                this.startVibration(); // Only update vibration if enabled
+            }
+        });
+
+        this.vibrationToggle.addEventListener('change', () => {
+            if (this.isSleepMode) {
+                if (this.vibrationToggle.checked) {
+                    this.startVibration();
+                } else {
+                    this.stopVibration();
+                }
+            }
+        });
+
+        this.whiteNoiseToggle.addEventListener("change", () => {
+            this.toggleWhiteNoise();
+        });
+
+        this.whiteNoiseVolume.addEventListener("input", () => {
+            this.setWhiteNoiseVolume();
+        });
+
         setInterval(() => {
             if (!this.isSleepMode) {
                 this.setTimeBasedTheme();
@@ -98,7 +126,6 @@ class DynamicSleepApp {
                 cite: '- Dalai Lama'
             }
         };
-
         const theme = themes[timeOfDay];
 
         // Update icon
@@ -115,7 +142,6 @@ class DynamicSleepApp {
     }
 
     updateBackgroundElements(timeOfDay) {
-        // Reset all background elements
         this.starsContainer.classList.remove('active');
         this.sunContainer.classList.remove('active');
         this.cloudsContainer.classList.remove('active');
@@ -139,24 +165,70 @@ class DynamicSleepApp {
         this.isSleepMode = this.sleepModeToggle.checked;
 
         if (this.isSleepMode) {
-            // Force night mode
-            this.mainContent.classList.remove('morning', 'afternoon');
-            this.mainContent.classList.add('night');
-            this.updateContentForTime('night');
-            this.updateBackgroundElements('night');
+            this.mainContent.classList.remove("morning", "afternoon");
+            this.mainContent.classList.add("night");
+            this.updateContentForTime("night");
+            this.updateBackgroundElements("night");
+            this.sleepSettings.classList.add("active");
+            this.whiteNoiseToggle.checked = true;
+            this.setWhiteNoiseVolume();
+            this.whiteNoiseAudio.play();
+            // Enable vibration toggle by default
+            this.vibrationToggle.checked = true;
+            if (this.vibrationToggle.checked) {
+                this.startVibration();
+            }
 
             //Send message to extension browser
             window.postMessage({ type: "SLEEPWELL_START_BLOCKING" }, "*");
         } else {
-            // Return to time-based theme
             this.setTimeBasedTheme();
             window.postMessage({ type: "SLEEPWELL_STOP_BLOCKING" }, "*");
 
+            this.sleepSettings.classList.remove("active");
+            this.whiteNoiseAudio.pause();
+            this.whiteNoiseAudio.currentTime = 0;
+            this.stopVibration();
         }
+    }
+
+    startVibration() {
+        this.stopVibration();
+        if (!("vibrate" in navigator)) return;
+        if (!this.vibrationToggle.checked) return;
+        const frequency = parseFloat(this.frequencySlider.value);
+        if (isNaN(frequency) || frequency <= 0) return;
+        const periodMs = 1000 / frequency;
+        const onMs = Math.round(periodMs / 2);
+        const offMs = Math.round(periodMs - onMs);
+        this.vibrationInterval = setInterval(() => {
+            navigator.vibrate([onMs, offMs]);
+        }, periodMs);
+    }
+
+    stopVibration() {
+        if (this.vibrationInterval) {
+            clearInterval(this.vibrationInterval);
+            this.vibrationInterval = null;
+        }
+        if ("vibrate" in navigator) {
+            navigator.vibrate(0);
+        }
+    }
+
+    toggleWhiteNoise() {
+        if (this.whiteNoiseToggle.checked) {
+            this.whiteNoiseAudio.play();
+        } else {
+            this.whiteNoiseAudio.pause();
+        }
+    }
+
+    setWhiteNoiseVolume() {
+        this.whiteNoiseAudio.volume = this.whiteNoiseVolume.value;
     }
 }
 
-// Initialize the app when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
     new DynamicSleepApp();
 });
