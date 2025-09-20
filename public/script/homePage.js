@@ -35,7 +35,8 @@ class DynamicSleepApp {
         this.createSleepTimer();
         this.setTimeBasedTheme();
 
-        this.sleepModeToggle.addEventListener("change", () => {
+        // Add toggle event listener
+        this.sleepModeToggle.addEventListener('change', () => {
             this.toggleSleepMode();
         });
 
@@ -289,6 +290,7 @@ class DynamicSleepApp {
 
     getCurrentTimeOfDay() {
         const hour = new Date().getHours();
+
         if (hour >= 6 && hour < 12) {
             return 'morning';
         } else {
@@ -298,9 +300,17 @@ class DynamicSleepApp {
 
     setTimeBasedTheme() {
         const timeOfDay = this.getCurrentTimeOfDay();
+
+        // Remove all time classes
         this.mainContent.classList.remove('morning', 'afternoon', 'night');
+
+        // Add current time class
         this.mainContent.classList.add(timeOfDay);
+
+        // Update content based on time
         this.updateContentForTime(timeOfDay);
+
+        // Update background elements
         this.updateBackgroundElements(timeOfDay);
     }
 
@@ -338,8 +348,13 @@ class DynamicSleepApp {
             }
         };
         const theme = themes[timeOfDay];
+
+        // Update icon
         this.modeIcon.innerHTML = theme.icon;
         this.modeIcon.setAttribute("class", `mode-icon ${theme.iconClass}`);
+
+
+        // Update text content
         this.welcomeTitle.textContent = theme.title;
         this.welcomeSubtitle.textContent = theme.subtitle;
         this.controlTitle.textContent = theme.controlTitle;
@@ -351,7 +366,9 @@ class DynamicSleepApp {
         this.starsContainer.classList.remove('active');
         this.sunContainer.classList.remove('active');
         this.cloudsContainer.classList.remove('active');
-        switch(timeOfDay) {
+
+        // Activate appropriate background elements
+        switch (timeOfDay) {
             case 'morning':
                 this.sunContainer.classList.add('active');
                 this.cloudsContainer.classList.add('active');
@@ -367,6 +384,7 @@ class DynamicSleepApp {
 
     toggleSleepMode() {
         this.isSleepMode = this.sleepModeToggle.checked;
+
         if (this.isSleepMode) {
             this.mainContent.classList.remove("morning", "afternoon");
             this.mainContent.classList.add("night");
@@ -381,11 +399,17 @@ class DynamicSleepApp {
             if (this.vibrationToggle.checked) {
                 this.startVibration();
             }
-            
+  
             // Start sleep timer
             this.startSleepTimer();
+
+            //Send message to extension browser
+            window.postMessage({ type: "SLEEPWELL_START_BLOCKING" }, "*");
+
         } else {
             this.setTimeBasedTheme();
+            window.postMessage({ type: "SLEEPWELL_STOP_BLOCKING" }, "*");
+
             this.sleepSettings.classList.remove("active");
             this.whiteNoiseAudio.pause();
             this.whiteNoiseAudio.currentTime = 0;
