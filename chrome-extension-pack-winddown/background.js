@@ -7,6 +7,8 @@ let siteUsage = {};
 let activeTabId = null;
 let activeDomain = null;
 let lastActiveTime = null;
+let trackingEnabled = false;
+
 
 // Periodic saving
 setInterval(() => {
@@ -28,12 +30,26 @@ chrome.webNavigation.onBeforeNavigate.addListener((details) => {
         return;
     }
 
-    if (!isAllowed(url)) {
+    //Only block when enabled for the msg 
+    if (trackingEnabled && !isAllowed(url)) {
+        console.log(trackingEnabled);
         chrome.tabs.update(details.tabId, {
             url: chrome.runtime.getURL("./public/blocked.html")
         });
     }
 });
+
+chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+    if (msg.action === "SLEEPWELL_START_BLOCKING") {
+        trackingEnabled = true;
+        console.log("Tracking enabled!");
+    }
+    if (msg.action === "SLEEPWELL_STOP_BLOCKING") {
+        trackingEnabled = false;
+        console.log("Tracking disabled!");
+    }
+});
+
 
 // When tab is activated
 chrome.tabs.onActivated.addListener(async (activeInfo) => {
