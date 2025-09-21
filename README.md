@@ -66,7 +66,14 @@ Turn SleepWell into a privacy-first sleep-wellness platform that helps other rec
 **Future Plan**
 - **Mobile app:** full controller for schedules, remote Sleep Mode, audio, and streaks (Android first; iOS more restrictive). Browser extension not needed
 - **ESP32 companion:** low-cost bedside/ wearable (accelerometer, optional PPG, I²S mic) that detects motion/snore events on-device and sends lightweight events to the app. If not, preferrably a smartwatch gadget which has the same functionality
-  
+
+
+## Pictures
+![Sleepwell Winddown Guardian](./images/sleepwell-winddown-guardian.png)
+![Sleepwell Homepage](./images/sleepwell-homepage.png)
+![Sleepwell Dashboard](./images/sleepwell-dashboard.png)
+![Sleepwell Leaderboard](./images/sleepwell-leaderboard.png)
+![Sleepwell Leaderboard Nudge](./images/sleepwell-nudge.png) 
 
 
 
