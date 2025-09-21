@@ -22,10 +22,19 @@ class DynamicSleepApp {
         this.cloudsContainer = document.getElementById('cloudsContainer');
         this.isSleepMode = false;
         this.vibrationInterval = null;
+
+
+        // Sleep timer properties
+        this.sleepStartTime = null;
+        this.sleepTimerInterval = null;
+        this.sleepTimerElement = null;
+
+
         this.init();
     }
 
     init() {
+        this.createSleepTimer();
         this.setTimeBasedTheme();
 
         // Add toggle event listener
@@ -161,6 +170,209 @@ class DynamicSleepApp {
         }
     }
 
+    createSleepTimer() {
+        // Create sleep timer element and insert it after the mode indicator
+        const sleepTimerHTML = `
+        <div class="sleep-timer-container" id="sleepTimerContainer" style="display: none;">
+            <div class="timer-card">
+                <div class="timer-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                        <polyline points="12,6 12,12 16,14" stroke="currentColor" stroke-width="2"/>
+                    </svg>
+                </div>
+                <div class="timer-content">
+                    <h3>Sleep Duration</h3>
+                    <div class="timer-display" id="sleepTimerDisplay">00:00:00</div>
+                    <p class="timer-status">Sleeping peacefully...</p>
+                </div>
+            </div>
+        </div>
+    `;
+
+        // Find the mode indicator and insert timer after it
+        const modeIndicator = document.querySelector('.mode-indicator');
+        modeIndicator.insertAdjacentHTML('afterend', sleepTimerHTML);
+
+        this.sleepTimerContainer = document.getElementById('sleepTimerContainer');
+        this.sleepTimerDisplay = document.getElementById('sleepTimerDisplay');
+
+        // Add CSS styles for the timer
+        this.addTimerStyles();
+    }
+    addTimerStyles() {
+        const style = document.createElement('style');
+        style.textContent = `
+            .sleep-timer-container {
+                margin-bottom: 40px;
+                width: 100%;
+                max-width: 400px;
+                opacity: 0;
+                transform: translateY(-20px);
+                transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            .sleep-timer-container.active {
+                opacity: 1;
+                transform: translateY(0);
+                display: block !important;
+            }
+            .timer-card {
+                background: rgba(15, 23, 42, 0.9);
+                border: 2px solid rgba(96, 165, 250, 0.3);
+                border-radius: 25px;
+                padding: 30px 25px;
+                text-align: center;
+                backdrop-filter: blur(15px);
+                box-shadow: 
+                    0 20px 40px rgba(0, 0, 0, 0.4),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+                position: relative;
+                overflow: hidden;
+            }
+            .timer-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(
+                    90deg,
+                    transparent,
+                    rgba(96, 165, 250, 0.1),
+                    transparent
+                );
+                animation: shimmer 3s ease-in-out infinite;
+            }
+            @keyframes shimmer {
+                0% { left: -100%; }
+                50% { left: 100%; }
+                100% { left: 100%; }
+            }
+            .timer-icon {
+                background: linear-gradient(135deg, rgba(96, 165, 250, 0.2), rgba(168, 85, 247, 0.2));
+                border-radius: 18px;
+                padding: 15px;
+                color: #60a5fa;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 20px;
+                animation: pulse-glow 2s ease-in-out infinite;
+            }
+            @keyframes pulse-glow {
+                0%, 100% { 
+                    box-shadow: 0 0 20px rgba(96, 165, 250, 0.3);
+                    transform: scale(1);
+                }
+                50% { 
+                    box-shadow: 0 0 30px rgba(96, 165, 250, 0.5);
+                    transform: scale(1.02);
+                }
+            }
+            .timer-content h3 {
+                font-size: 1.3rem;
+                font-weight: 600;
+                margin-bottom: 15px;
+                color: #f1f5f9;
+                opacity: 0.9;
+            }
+            .timer-display {
+                font-size: 3rem;
+                font-weight: 700;
+                font-family: 'Courier New', monospace;
+                color: #60a5fa;
+                text-shadow: 0 0 20px rgba(96, 165, 250, 0.4);
+                margin-bottom: 10px;
+                letter-spacing: 2px;
+                background: linear-gradient(135deg, #60a5fa, #a78bfa);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+            }
+            .timer-status {
+                font-size: 1rem;
+                color: #cbd5e1;
+                opacity: 0.8;
+                font-style: italic;
+            }
+            /* Hide sleep stats when in sleep mode */
+            .main-content.night .sleep-stats {
+                opacity: 0;
+                transform: translateY(-20px);
+                pointer-events: none;
+                transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+                max-height: 0;
+                overflow: hidden;
+                margin-bottom: 0;
+            }
+            /* Mobile responsiveness */
+            @media (max-width: 768px) {
+                .timer-display {
+                    font-size: 2.5rem;
+                    letter-spacing: 1px;
+                }
+                
+                .timer-card {
+                    padding: 25px 20px;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+
+    formatSleepDuration(milliseconds) {
+        const totalSeconds = Math.floor(milliseconds / 1000);
+        const hours = Math.floor(totalSeconds / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        const seconds = totalSeconds % 60;
+
+        return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }
+
+    startSleepTimer() {
+        if (this.timerInterval) return;
+
+        // Restore saved start/elapsed times if available
+        const savedStart = localStorage.getItem("sleepStartTime");
+        const savedElapsed = parseInt(localStorage.getItem("sleepElapsedTime") || "0", 10);
+
+        if (savedStart) {
+            this.sleepStartTime = parseInt(savedStart, 10);
+            this.elapsedTime = savedElapsed;
+        } else {
+            this.sleepStartTime = Date.now();
+            this.elapsedTime = 0;
+            localStorage.setItem("sleepStartTime", this.sleepStartTime);
+        }
+
+        this.sleepTimerContainer.style.display = "block";
+        this.sleepTimerContainer.classList.add("active");
+
+        this.timerInterval = setInterval(() => {
+            const now = Date.now();
+            const elapsed = this.elapsedTime + (now - this.sleepStartTime);
+            this.sleepTimerDisplay.textContent = this.formatSleepDuration(elapsed);
+            localStorage.setItem("sleepElapsedTime", elapsed);
+        }, 1000);
+    }
+
+    stopSleepTimer() {
+        clearInterval(this.timerInterval);
+        this.timerInterval = null;
+
+        this.sleepStartTime = null;
+        this.elapsedTime = 0;
+
+        this.sleepTimerDisplay.textContent = "00:00:00";
+        this.sleepTimerContainer.style.display = "none";
+        this.sleepTimerContainer.classList.remove("active");
+
+        localStorage.removeItem("sleepStartTime");
+        localStorage.removeItem("sleepElapsedTime");
+    }
+
+
     toggleSleepMode() {
         this.isSleepMode = this.sleepModeToggle.checked;
         localStorage.setItem("isSleepMode", JSON.stringify(this.isSleepMode));
@@ -181,6 +393,7 @@ class DynamicSleepApp {
             if (this.whiteNoiseToggle.checked) this.whiteNoiseAudio.play();
             if (this.vibrationToggle.checked) this.startVibration();
 
+            this.startSleepTimer();
             window.postMessage({ type: "SLEEPWELL_START_BLOCKING" }, "*");
         } else {
             this.setTimeBasedTheme();
@@ -189,6 +402,7 @@ class DynamicSleepApp {
             this.whiteNoiseAudio.currentTime = 0;
             this.stopVibration();
 
+            this.stopSleepTimer();
             window.postMessage({ type: "SLEEPWELL_STOP_BLOCKING" }, "*");
         }
     }
@@ -206,6 +420,7 @@ class DynamicSleepApp {
         // Now apply the mode based on savedSleep
         if (savedSleep) {
             this.applySleepMode(); // a helper that contains the "if (isSleepMode) { ... }" logic
+            this.startSleepTimer(); // resume timer on reload
         }
     }
 
