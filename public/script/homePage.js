@@ -163,32 +163,49 @@ class DynamicSleepApp {
 
     toggleSleepMode() {
         this.isSleepMode = this.sleepModeToggle.checked;
+        localStorage.setItem("isSleepMode", JSON.stringify(this.isSleepMode));
+        localStorage.setItem("whiteNoiseEnabled", this.whiteNoiseToggle.checked);
+        localStorage.setItem("vibrationEnabled", this.vibrationToggle.checked);
 
+        this.applySleepMode();
+    }
+
+    applySleepMode() {
         if (this.isSleepMode) {
             this.mainContent.classList.remove("morning", "afternoon");
             this.mainContent.classList.add("night");
             this.updateContentForTime("night");
             this.updateBackgroundElements("night");
             this.sleepSettings.classList.add("active");
-            this.whiteNoiseToggle.checked = true;
-            this.setWhiteNoiseVolume();
-            this.whiteNoiseAudio.play();
-            // Enable vibration toggle by default
-            this.vibrationToggle.checked = true;
-            if (this.vibrationToggle.checked) {
-                this.startVibration();
-            }
 
-            //Send message to extension browser
+            if (this.whiteNoiseToggle.checked) this.whiteNoiseAudio.play();
+            if (this.vibrationToggle.checked) this.startVibration();
+
             window.postMessage({ type: "SLEEPWELL_START_BLOCKING" }, "*");
         } else {
             this.setTimeBasedTheme();
-            window.postMessage({ type: "SLEEPWELL_STOP_BLOCKING" }, "*");
-
             this.sleepSettings.classList.remove("active");
             this.whiteNoiseAudio.pause();
             this.whiteNoiseAudio.currentTime = 0;
             this.stopVibration();
+
+            window.postMessage({ type: "SLEEPWELL_STOP_BLOCKING" }, "*");
+        }
+    }
+
+    restorePreferences() {
+        const savedSleep = JSON.parse(localStorage.getItem("isSleepMode"));
+        const savedWhiteNoise = localStorage.getItem("whiteNoiseEnabled") === "true";
+        const savedVibration = localStorage.getItem("vibrationEnabled") === "true";
+
+        // Set checkboxes first
+        this.sleepModeToggle.checked = savedSleep || false;
+        this.whiteNoiseToggle.checked = savedWhiteNoise;
+        this.vibrationToggle.checked = savedVibration;
+
+        // Now apply the mode based on savedSleep
+        if (savedSleep) {
+            this.applySleepMode(); // a helper that contains the "if (isSleepMode) { ... }" logic
         }
     }
 
@@ -230,5 +247,21 @@ class DynamicSleepApp {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    new DynamicSleepApp();
+    const app = new DynamicSleepApp();
+
+    // Restore saved preferences safely
+    const savedSleep = JSON.parse(localStorage.getItem("isSleepMode"));
+    const savedWhiteNoise = localStorage.getItem("whiteNoiseEnabled") === "true";
+    const savedVibration = localStorage.getItem("vibrationEnabled") === "true";
+
+    // Apply internal state first
+    app.isSleepMode = savedSleep || false;
+
+    // Apply checkboxes
+    app.sleepModeToggle.checked = app.isSleepMode;
+    app.whiteNoiseToggle.checked = savedWhiteNoise;
+    app.vibrationToggle.checked = savedVibration;
+
+    // Finally, run the mode logic
+    app.applySleepMode();
 });
