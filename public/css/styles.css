@@ -11,10 +11,53 @@ input {
   font-family: "Poppins", sans-serif;
 }
 
+/* Starry Night Background */
+.stars-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+    z-index: -2;
+}
+
+.stars, .twinkling, .clouds {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.stars {
+    background: transparent url('data:image/svg+xml,<svg width="200" height="200" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="stars" x="0" y="0" width="200" height="200" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.8"/><circle cx="75" cy="75" r="0.5" fill="white" opacity="0.6"/><circle cx="125" cy="125" r="1" fill="white" opacity="0.9"/><circle cx="175" cy="175" r="0.5" fill="white" opacity="0.7"/><circle cx="50" cy="150" r="1" fill="white" opacity="0.5"/><circle cx="150" cy="50" r="0.5" fill="white" opacity="0.8"/><circle cx="100" cy="25" r="0.5" fill="white" opacity="0.6"/><circle cx="25" cy="100" r="1" fill="white" opacity="0.7"/><circle cx="175" cy="100" r="0.5" fill="white" opacity="0.9"/><circle cx="100" cy="175" r="1" fill="white" opacity="0.6"/></pattern></defs><rect width="100%" height="100%" fill="url(%23stars)"/></svg>') repeat;
+    animation: move-stars 100s linear infinite;
+}
+
+.twinkling {
+    background: transparent url('data:image/svg+xml,<svg width="300" height="300" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="twinkle" x="0" y="0" width="300" height="300" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="white" opacity="0"/><circle cx="150" cy="100" r="0.5" fill="white" opacity="0"/><circle cx="250" cy="200" r="1" fill="white" opacity="0"/><circle cx="100" cy="250" r="0.5" fill="white" opacity="0"/></pattern></defs><rect width="100%" height="100%" fill="url(%23twinkle)"/></svg>') repeat;
+}
+
+.clouds {
+    background: url('data:image/svg+xml,<svg width="400" height="400" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="clouds" x="0" y="0" width="400" height="400" patternUnits="userSpaceOnUse"><ellipse cx="100" cy="100" rx="60" ry="30" fill="white" opacity="0.03"/><ellipse cx="300" cy="200" rx="80" ry="40" fill="white" opacity="0.02"/><ellipse cx="50" cy="300" rx="40" ry="20" fill="white" opacity="0.03"/></pattern></defs><rect width="100%" height="100%" fill="url(%23clouds)"/></svg>') repeat;
+    animation: move-clouds 120s linear infinite;
+}
+
+@keyframes move-stars {
+    from { transform: translateY(-100px); }
+    to { transform: translateY(100vh); }
+}
+
+@keyframes move-clouds {
+    from { transform: translateX(-100px); }
+    to { transform: translateX(100vw); }
+}
+
 .container {
   position: relative;
   width: 100%;
-  background-color: #fff;
+  background-color: transparent; /* <-- change this line */
   min-height: 100vh;
   overflow: hidden;
 }
@@ -177,7 +220,7 @@ form.sign-in-form {
     );
     transition: 1.8s ease-in-out;
     border-radius: 50%;
-    z-index: 6;
+    z-index: -5;
   }
   
 
