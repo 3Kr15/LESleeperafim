@@ -240,6 +240,7 @@ function createFriendCard(friend){
             ${!friend.isCurrentUser?`
             <div class="friend-actions">
                 <button class="action-btn nudge-btn" onclick="nudgeFriend(${friend.id}, '${friend.name}')">👋 Nudge</button>
+                <button class="action-btn download-btn" onclick="downloadStreakImage(${friend.id}, '${friend.name}', ${friend.streak})">📸 Save</button>
             </div>`:''}
         </div>`;
 }
@@ -356,3 +357,83 @@ function getAvatarGradient(name){
     return g[name.charCodeAt(0)%g.length];
 }
 
+
+function downloadStreakImage(friendId, friendName, streak) {
+    // Create a canvas element for the screenshot
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    
+    // Set canvas size
+    canvas.width = 400;
+    canvas.height = 600;
+    
+    // Create gradient background
+    const gradient = ctx.createLinearGradient(0, 0, 400, 600);
+    gradient.addColorStop(0, '#1a1a2e');
+    gradient.addColorStop(0.5, '#16213e');
+    gradient.addColorStop(1, '#0f3460');
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, 400, 600);
+    
+    // Add decorative elements
+    ctx.fillStyle = 'rgba(139, 92, 246, 0.1)';
+    ctx.beginPath();
+    ctx.arc(100, 150, 80, 0, Math.PI * 2);
+    ctx.fill();
+    
+    ctx.fillStyle = 'rgba(88, 28, 135, 0.15)';
+    ctx.beginPath();
+    ctx.arc(300, 400, 60, 0, Math.PI * 2);
+    ctx.fill();
+    
+    // Add title
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 32px -apple-system, BlinkMacSystemFont, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('Sleep Streak! 🌙', 200, 80);
+    
+    // Add friend name
+    ctx.font = 'bold 28px -apple-system, BlinkMacSystemFont, sans-serif';
+    ctx.fillText(friendName, 200, 150);
+    
+    // Add streak number (large)
+    ctx.font = 'bold 120px -apple-system, BlinkMacSystemFont, sans-serif';
+    ctx.fillStyle = '#8b5cf6';
+    ctx.fillText(streak, 200, 280);
+    
+    // Add "days" text
+    ctx.font = 'bold 36px -apple-system, BlinkMacSystemFont, sans-serif';
+    ctx.fillStyle = '#ffffff';
+    ctx.fillText('DAYS', 200, 330);
+    
+    // Add motivational message
+    ctx.font = '24px -apple-system, BlinkMacSystemFont, sans-serif';
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+    
+    let message = '';
+    if (streak >= 30) message = 'Sleep Master! 🏆';
+    else if (streak >= 14) message = 'On Fire! 🔥';
+    else if (streak >= 7) message = 'Great Progress! ⭐';
+    else message = 'Keep Going! 💪';
+    
+    ctx.fillText(message, 200, 400);
+    
+    // Add app branding
+    ctx.font = 'bold 20px -apple-system, BlinkMacSystemFont, sans-serif';
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+    ctx.fillText('SleepWell App', 200, 520);
+    
+    // Convert to blob and download
+    canvas.toBlob(function(blob) {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${friendName}-streak-${streak}days.png`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        showToast(`Screenshot downloaded! 📸`);
+    }, 'image/png');
+}

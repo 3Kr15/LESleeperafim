@@ -610,3 +610,24 @@ filter: blur(2px);
     background: rgba(96, 165, 250, 0.7);
 }
 
+.download-btn { 
+    background: linear-gradient(135deg, rgba(16,185,129,.3), rgba(6,182,212,.2)); 
+    color: #10b981; 
+    border: 2px solid rgba(16,185,129,.4); 
+}
+.download-btn:hover { 
+    background: linear-gradient(135deg, rgba(16,185,129,.5), rgba(6,182,212,.3)); 
+    transform: scale(1.05); 
+    box-shadow: 0 8px 20px rgba(16,185,129,.2); 
+}
+
+.friend-actions { 
+    display: flex; 
+    gap: 8px; 
+}
+
+.friend-actions .action-btn {
+    flex: 1;
+    padding: 10px 14px;
+    font-size: 12px;
+}
