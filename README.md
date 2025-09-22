@@ -1,5 +1,8 @@
 # SleepWell (Web App + Chrome Browser Extension)
 
+**Devpost Link**: [SleepWell on Devpost](https://devpost.com/software/sleepwell-rmcvpg)
+
+
 ## Overview
 SleepWell is a web and browser extension application designed to help users achieve better rest, deeper relaxation, and more refreshing nights. It creates a calming sleep environment through features like white noise playback, vibration patterns, and visual night mode. When sleep mode is enabled, browser extensions kicks in to filter allowed sites only and block access for other websites
 
