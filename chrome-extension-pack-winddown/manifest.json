@@ -13,7 +13,13 @@
         "type": "module"
     },
     "action": {
-        "default_popup": "../public/popup.html"
+        "default_popup": "../public/popup.html",
+        "default_icon": {
+            "32": "public/icons/baby-sleep.png"
+        }
+    },
+    "icons": {
+        "32": "public/icons/baby-sleep.png"
     },
     "host_permissions": [
         "<all_urls>"

@@ -24,15 +24,29 @@ export const isAllowed = (url) => {
 
 
 // Helper function to save elapsed time
-export const recordTime = (activeDomain, lastActiveTime, siteUsage) => {
-    if (activeDomain && lastActiveTime) {
-        const now = Date.now();
-        const elapsed = now - lastActiveTime;
-        if (!siteUsage[activeDomain]) siteUsage[activeDomain] = 0;
-        siteUsage[activeDomain] += elapsed;
-        lastActiveTime = now;
+export const recordTime = async (activeDomain, lastActiveTime, siteUsage) => {
+    if (!activeDomain || !lastActiveTime) return;
 
-        chrome.storage.local.set({ siteUsage });
-        console.log(`${activeDomain} → ${siteUsage[activeDomain] / 1000}s`);
+    const now = Date.now();
+    const today = new Date().toISOString().slice(0, 10); // "YYYY-MM-DD"
+    console.log(siteUsage); //Debugging
+
+    // Get lastTrackedDate from storage
+    const { lastTrackedDate } = await chrome.storage.local.get("lastTrackedDate");
+
+    // Reset if new day
+    if (lastTrackedDate !== today) {
+        siteUsage = {}; // clear usage
+        await chrome.storage.local.set({ siteUsage, lastTrackedDate: today });
+        console.log("New day detected");
     }
-}
+
+    // Record elapsed time
+    const elapsed = now - lastActiveTime;
+    if (!siteUsage[activeDomain]) siteUsage[activeDomain] = 0;
+    siteUsage[activeDomain] += elapsed;
+
+    // Save updated usage
+    await chrome.storage.local.set({ siteUsage });
+    console.log(`${activeDomain} → ${Math.round(siteUsage[activeDomain] / 1000)}s`);
+};

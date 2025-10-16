@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SleepWell - Profile</title>
+    <link rel="icon" type="image/png" href="../assets/baby-sleep.png" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #151531 0%, #1a1a4c 100%);
+            color: white;
+            min-height: 100vh;
+        }
+
+        .profile-container {
+            width: calc(100% - 320px);
+            margin-left: 320px;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .profile-header {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin: 0 auto 20px;
+            border: 3px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .profile-name {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .profile-subtitle {
+            opacity: 0.7;
+            margin-bottom: 20px;
+        }
+
+        .profile-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-number {
+            font-size: 20px;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.7;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .profile-section {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 35px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+
+        .setting-name {
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .setting-description {
+            font-size: 14px;
+            opacity: 0.7;
+            margin-top: 2px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            display: none;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 24px;
+            transition: 0.3s;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            border-radius: 50%;
+            transition: 0.3s;
+        }
+
+        input:checked + .toggle-slider {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(26px);
+        }
+
+        .time-input, .select-input {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 8px 12px;
+            color: white;
+            font-size: 14px;
+        }
+
+        .action-button {
+            width: 100%;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .action-button.primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .action-button.secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .action-button.danger {
+            background: rgba(255, 99, 132, 0.2);
+            color: #ff6384;
+            border: 1px solid rgba(255, 99, 132, 0.3);
+        }
+
+        .action-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .achievement-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .achievement-card.earned {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
+            border-color: rgba(102, 126, 234, 0.3);
+        }
+
+        .achievement-icon {
+            font-size: 24px;
+        }
+
+        .achievement-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .achievement-description {
+            font-size: 12px;
+            opacity: 0.7;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+
+        @media (max-width: 1200px) {
+            .profile-container {
+                margin-left: 0;
+                width: 100%;
+                padding: 15px;
+            }
+
+            .profile-stats {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .achievements-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="navbar-container"></div>
+    
+    <div class="profile-container">
+        <!-- Profile Header -->
+        <div class="profile-header">
+            <div class="profile-avatar">👤</div>
+            <h1 class="profile-name">Sleep Warrior</h1>
+            <p class="profile-subtitle">Sweet Dreams Await</p>
+            
+            <div class="profile-stats">
+                <div class="stat-card">
+                    <div class="stat-number">7</div>
+                    <div class="stat-label">Day Streak</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">8h 32m</div>
+                    <div class="stat-label">Avg Sleep</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">15</div>
+                    <div class="stat-label">Friends</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sleep Settings -->
+        <div class="profile-section">
+            <h2 class="section-title">
+                <span>🎯</span>
+                Sleep Goals
+            </h2>
+            <div class="setting-item">
+                <div>
+                    <div class="setting-name">Bedtime Reminder</div>
+                    <div class="setting-description">Get notified when it's time to sleep</div>
+                </div>
+                <input type="time" value="22:00" class="time-input">
+            </div>
+            <div class="setting-item">
+                <div>
+                    <div class="setting-name">Wake Up Time</div>
+                    <div class="setting-description">Your preferred wake up time</div>
+                </div>
+                <input type="time" value="06:30" class="time-input">
+            </div>
+        </div>
+
+        <!-- Preferences -->
+        <div class="profile-section">
+            <h2 class="section-title">
+                <span>⚙️</span>
+                Preferences
+            </h2>
+            <div class="setting-item">
+                <div>
+                    <div class="setting-name">Sleep Sounds</div>
+                    <div class="setting-description">Calming sounds for better sleep</div>
+                </div>
+                <select class="select-input">
+                    <option>Rain Sounds</option>
+                    <option>Ocean Waves</option>
+                    <option>Forest Ambience</option>
+                    <option>White Noise</option>
+                    <option>Silence</option>
+                </select>
+            </div>
+            <div class="setting-item">
+                <div>
+                    <div class="setting-name">Dark Mode</div>
+                    <div class="setting-description">Easier on your eyes at night</div>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" checked>
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+            <div class="setting-item">
+                <div>
+                    <div class="setting-name">Notifications</div>
+                    <div class="setting-description">Get notified about activities</div>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" checked>
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Achievements -->
+        <div class="profile-section">
+            <h2 class="section-title">
+                <span>🏆</span>
+                Achievements
+            </h2>
+            <div class="achievements-grid">
+                <div class="achievement-card earned">
+                    <div class="achievement-icon">🔥</div>
+                    <div>
+                        <div class="achievement-name">Week Warrior</div>
+                        <div class="achievement-description">7-day sleep streak</div>
+                    </div>
+                </div>
+                <div class="achievement-card earned">
+                    <div class="achievement-icon">😴</div>
+                    <div>
+                        <div class="achievement-name">Deep Sleeper</div>
+                        <div class="achievement-description">8+ hours of sleep</div>
+                    </div>
+                </div>
+                <div class="achievement-card">
+                    <div class="achievement-icon">📅</div>
+                    <div>
+                        <div class="achievement-name">Monthly Master</div>
+                        <div class="achievement-description">30-day sleep streak</div>
+                    </div>
+                </div>
+                <div class="achievement-card">
+                    <div class="achievement-icon">👥</div>
+                    <div>
+                        <div class="achievement-name">Social Sleeper</div>
+                        <div class="achievement-description">10 friends added</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Account Actions -->
+        <div class="profile-section">
+            <h2 class="section-title">
+                <span>👤</span>
+                Account
+            </h2>
+            <button class="action-button secondary" onclick="showToast('Sleep data exported! 💾')">
+                💾 Export Sleep Data
+            </button>
+            <button class="action-button secondary" onclick="showToast('Profile shared! 📤')">
+                📤 Share Profile
+            </button>
+            <button class="action-button danger" onclick="confirmReset()">
+                🔄 Reset All Data
+            </button>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script src="/script/script.js"></script>
+    <script>
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        function confirmReset() {
+            if (confirm('Are you sure you want to reset all data? This cannot be undone.')) {
+                showToast('Data reset successfully! 🔄');
+            }
+        }
+
+        // Add some interactivity to toggles
+        document.querySelectorAll('.toggle-switch input').forEach(toggle => {
+            toggle.addEventListener('change', () => {
+                const setting = toggle.closest('.setting-item').querySelector('.setting-name').textContent;
+                showToast(`${setting} ${toggle.checked ? 'enabled' : 'disabled'}!`);
+            });
+        });
+    </script>
+</body>
+</html>

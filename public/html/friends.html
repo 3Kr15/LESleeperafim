@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sleep Squad Friends 😴</title>
+    <link rel="stylesheet" href="/css/friends.css">
+    <link rel="icon" type="image/png" href="../assets/baby-sleep.png" />
+</head>
+<body>
+    <div id="navbar-container"></div>
+
+    <div id="app">
+        <header class="header">
+            <div class="header-content">
+                <div class="header-actions">
+                    <div class="search-container">
+                        <input type="text" id="searchInput" placeholder="Search friends..." class="search-input">
+                        <span class="search-icon">🔍</span>
+                    </div>
+                    <button class="invite-btn" id="inviteBtn">+ Invite</button>
+                </div>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="today-section">
+                <!-- Top 3 Podium -->
+                <div class="podium-container" id="podiumContainer">
+                    <!-- Podium will be populated here -->
+                </div>
+            </div>
+
+            <!-- Regular Leaderboard -->
+            <div class="leaderboard" id="leaderboard">
+                <!-- Remaining friends will be populated here -->
+            </div>
+
+            <!-- Empty State -->
+            <div class="empty-state" id="emptyState" style="display: none;">
+                <div class="empty-icon">😴</div>
+                <h3>Your squad is empty...</h3>
+                <p>Tap Invite to add your first friend and start tracking sleep together!</p>
+                <button class="invite-btn-large" onclick="openInviteModal()">Invite Friends</button>
+            </div>
+        </main>
+
+        <!-- Invite Modal -->
+        <div class="modal-overlay" id="inviteModal">
+            <div class="modal">
+                <div class="modal-header">
+                    <h3>Add Friends to Compare Sleeping Patterns Now!</h3>
+                    <button class="close-btn" onclick="closeInviteModal()">✕</button>
+                </div>
+                <div class="modal-content">
+                    <p>Share this code with your friends:</p>
+                    <div class="invite-code">
+                        <span id="inviteCode">ABC123</span>
+                        <button class="copy-btn" onclick="copyInviteCode()">Copy</button>
+                    </div>
+                    <button class="share-btn" onclick="shareInvite()">Share Link</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toast Notification -->
+        
+        <!-- Nudge Modal -->
+        <div class="nudge-modal" id="nudgeModal">
+            <div class="nudge-modal-content">
+                <div class="nudge-animation">
+                    <div class="nudge-emoji">👋</div>
+                    <div class="nudge-text">
+                        <div class="nudge-title">Nudge Sent!</div>
+                        <div class="nudge-subtitle">You reminded <span id="nudgeFriendName">Friend</span> to get some sleep!</div>
+                    </div>
+                    <div class="nudge-sparkles">
+                        <div class="sparkle">✨</div>
+                        <div class="sparkle">⭐</div>
+                        <div class="sparkle">💫</div>
+                        <div class="sparkle">✨</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/script/friends.js"></script>
+    <script src="/script/script.js"></script>
+</body>
+</html>
